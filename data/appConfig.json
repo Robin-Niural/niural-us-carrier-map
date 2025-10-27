@@ -1,0 +1,15 @@
+{
+  "branding": {
+    "title": "PEO MHP Carrier Availability",
+    "subtitle": "Hover or tap a state for carrier, large-group definition, age-rating notes, and sales nuances."
+  },
+  "legend": {
+    "aetna": "Aetna",
+    "restricted": "No PEO MHP / Restricted"  },
+
+  "territories": {
+    "Puerto Rico": "HQ in PR may not offer an Aetna PEO medical master policy. Aetna can cover WSEs of continental US HQs with WSEs in PR. Indemnity / CMED only.",
+    "US Virgin Islands": "Similar to PR: continental US HQs with WSEs in VI may be covered; Indemnity / CMED plans only."
+  },
+  "footerText": "© Niural AI | Carrier visualization"
+}

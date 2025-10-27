@@ -1,0 +1,135 @@
+{
+  "rules": {
+    "defaultCarrier": "Aetna",
+    "largeGroup101": ["CA", "CO", "NY", "VT"]
+  },
+  "restrictedStates": {
+    "HI": {
+      "coverageNotes": "Aetna does not offer compliant plans in HI for PEOs. Therefore, Aetna is restricted.",
+      "salesNotes": "",
+      "sdiRequirements": "Employers must maintain an approved Temporary Disability Insurance (TDI) policy and pay ≥ 50 % of premium (employees may pay up to 50 %). Coverage via private or self-insured plan approved by the state."
+    },
+    "NM": {
+      "coverageNotes": "Aetna recommends against offering a PEO large group MHP to companies HQ'd in NM.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "VT": {
+      "coverageNotes": "Aetna recommends against offering a PEO large group MHP to companies HQ'd in VT.",
+      "salesNotes": "",
+      "sdiRequirements": ""
+    }
+  },
+  "importantStates": {
+    "AK": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "ID": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "MD": {
+      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "ME": {
+      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "MO": {
+      "coverageNotes": "PPO and EPO networks only.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "MT": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "SD": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "WY": {
+      "coverageNotes": "Limited OA MC/EPO availability.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    }
+  },
+
+  "notableStates": {
+  "NY": {
+    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
+    "salesNotes": "",
+    "sdiRequirements": "Employers must provide both Statutory Disability (DBL) and Paid Family Leave (PFL) coverage. Employers pay at least half of the premium cost; employees can contribute up to 0.5% of wages, capped at $0.60 per week. Coverage can be through an approved private insurer or the state plan."
+  },
+  "NJ": {
+    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
+    "salesNotes": "",
+    "sdiRequirements": "Employers must offer Temporary Disability Insurance (TDI) and Family Leave Insurance (FLI) through the state plan or an approved private/self-insured plan (with state approval ID if private)."
+  },
+  "CA": {
+    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
+    "salesNotes": "",
+    "sdiRequirements": "Employees fund the State Disability Insurance (SDI) program through payroll deductions. Provides short-term disability and Paid Family Leave; private substitution not allowed."
+  },
+  "RI": {
+    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
+    "salesNotes": "",
+    "sdiRequirements": "Employees contribute to the Temporary Disability Insurance (TDI) and Temporary Caregiver Insurance (TCI) programs for income replacement during medical or caregiving leave."
+  },
+
+
+
+  "AK": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "ID": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "MD": {
+      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "ME": {
+      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "MO": {
+      "coverageNotes": "PPO and EPO networks only.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "MT": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "SD": {
+      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    },
+    "WY": {
+      "coverageNotes": "Limited OA MC/EPO availability.",
+      "salesNotes": "",
+      "sdiRequirements": "—"
+    }
+}
+
+
+
+  
+}

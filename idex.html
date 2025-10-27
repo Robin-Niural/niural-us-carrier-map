@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================= -->
+  <!-- 🧠 Meta & Page Setup -->
+  <!-- ============================= -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Niural AI — U.S. Carrier Map</title>
+
+  <!-- ============================= -->
+  <!-- 🎨 Fonts -->
+  <!-- ============================= -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- ============================= -->
+  <!-- 📦 Vendor Libraries -->
+  <!-- ============================= -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+
+  <!-- ============================= -->
+  <!-- 💅 App Styles -->
+  <!-- ============================= -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+  <div class="wrap">
+    <!-- ============================= -->
+    <!-- 🏷️ Header / Branding -->
+    <!-- ============================= -->
+    <header>
+      <div class="brand">
+        <!-- Niural AI Logos (swap by theme) -->
+        <img
+          src="assets/images/niural-logo-light.png"
+          alt="Niural AI logo (light mode)"
+          class="logo logo-dark"
+        >
+        <img
+          src="assets/images/niural-logo-dark.png"
+          alt="Niural AI logo (dark mode)"
+          class="logo logo-light"
+        >
+
+        <h1 id="appTitle">U.S. Carrier Availability & Compliance Data by State</h1>
+        <p id="appSubtitle">
+          Hover or tap a state for carrier info, large-group definitions, age-rating notes, and sales nuances.
+        </p>
+      </div>
+
+      <!-- Inline legend (UI-only) -->
+      <div class="legendUI" aria-label="Map legend (UI)">
+        <span>
+          <span class="swatch" style="background:var(--aetna)"></span>
+          Aetna
+        </span>
+        <span>
+          <span class="swatch" style="background:var(--restricted)"></span>
+          No PEO MHP / Restricted
+        </span>
+      </div>
+
+      <!-- Theme toggle button -->
+      <button
+        id="themeToggle"
+        class="theme-toggle"
+        title="Toggle dark/light mode"
+        aria-label="Toggle theme"
+      >
+        🌙
+      </button>
+    </header>
+
+    <!-- ============================= -->
+    <!-- 🗺️ Main Map Section -->
+    <!-- ============================= -->
+    <section class="mapWrap" aria-labelledby="map-title">
+      <div class="mapHeader">
+        <h2 id="map-title">Interactive Map</h2>
+
+        <!-- Map controls -->
+        <div class="controls">
+          <!-- 🔍 State Search -->
+          <div class="search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="m21 21-4.3-4.3m1.8-5.2a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input
+              id="stateSearch"
+              placeholder="Search state (e.g., California or CA)"
+              aria-label="Search state"
+            />
+          </div>
+
+          <!-- 🧩 Filters -->
+          <div class="filters" role="group" aria-label="Filter by carrier">
+            <label><input type="checkbox" value="Aetna" checked> Aetna</label>
+            <label><input type="checkbox" value="Restricted" checked> Restricted</label>
+            <label><input type="checkbox" value="Important" checked> * Important</label>
+          </div>
+
+          <!-- 📤 Export Button -->
+          <button
+            class="cta"
+            id="exportBtn"
+            title="Export map as PNG"
+            aria-label="Export map as PNG"
+          >
+            Export PNG
+          </button>
+        </div>
+      </div>
+
+      <!-- 🧭 D3-Generated Map Container -->
+      <svg id="map" role="img" aria-describedby="map-desc"></svg>
+      <p id="map-desc" class="sr-only">
+        U.S. map with states color-coded by carrier category.
+        Tap or hover for details. States marked with an asterisk have important sales notes.
+      </p>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 🧱 Sidebar: State Details / Info -->
+    <!-- ============================= -->
+    <aside class="side">
+      <!-- Selected state detail card -->
+      <div class="card" id="detailCard">
+        <h3 id="detailTitle">No state selected</h3>
+        <div class="kv" id="detailBodyKV">
+          <div>Primary carrier</div><div>—</div>
+          <div>Large group definition</div><div>—</div>
+          <div>Coverage notes</div><div>—</div>
+          <div>SDI requirements</div><div>—</div>
+          <div>Sales nuances</div><div>—</div>
+        </div>
+      </div>
+
+      <!-- Territories & notes -->
+      <div class="card">
+        <h3>Territories & Notes</h3>
+        <div class="kv" id="territoriesKV">
+          <!-- Populated dynamically from appConfig.json -->
+        </div>
+      </div>
+
+      <!-- How to edit data -->
+      <div class="card">
+        <h3>How to Edit Data</h3>
+        <p>
+          Update
+          <span class="kbd">data/appConfig.json</span>
+          (branding, legend, territories) and
+          <span class="kbd">data/stateData.json</span>
+          (state overrides & rules). No code edits needed for common changes.
+        </p>
+      </div>
+    </aside>
+
+    <!-- ============================= -->
+    <!-- ⚙️ Footer -->
+    <!-- ============================= -->
+    <footer>
+      <div id="footBrand">© Niural AI — Carrier Visualization</div>
+      <div>Keyboard: Tab to focus map, Enter to select a state.</div>
+    </footer>
+  </div>
+
+  <!-- ============================= -->
+  <!-- 💬 Tooltip (hover dialog) -->
+  <!-- ============================= -->
+  <div class="tooltip" id="tooltip" role="dialog" aria-hidden="true"></div>
+
+  <!-- ============================= -->
+  <!-- ⚡ App Script -->
+  <!-- ============================= -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

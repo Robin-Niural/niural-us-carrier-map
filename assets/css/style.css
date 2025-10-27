@@ -1,0 +1,516 @@
+/* ============================================================
+   Niural AI — U.S. Carrier Map Stylesheet
+   ============================================================
+   ✅ No functional changes
+   🧭 Focus: readability, structure, and maintainability
+   ============================================================ */
+
+
+/* ============================================================
+   1️⃣ Root Variables (Dark Theme Defaults)
+   ============================================================ */
+:root {
+  /* Brand gradient */
+  --niural-purple: #714DFF;
+  --niural-pink: #E151FF;
+  --gradient: linear-gradient(135deg, var(--niural-purple) 0%, var(--niural-pink) 100%);
+
+  /* Core color system */
+  --bg: radial-gradient(1600px 800px at 10% -20%, rgba(113,77,255,0.15), transparent 55%),
+        radial-gradient(1400px 900px at 110% 110%, rgba(225,81,255,0.12), transparent 60%),
+        #0A0A0C;
+  --panel: #0F0F13;
+  --card: #13131A;
+  --border: rgba(255,255,255,.10);
+  --chip: #171724;
+  --ink: #FAFAFA;
+  --muted: #A1A1AB;
+
+  /* Carrier colors */
+  --aetna: #6EE7B7;       /* Green */
+  --restricted: #F59E0B;  /* Amber */
+
+  /* Focus & interaction */
+  --focus: rgba(113,77,255,0.65);
+}
+
+
+/* ============================================================
+   2️⃣ Light Theme Variant
+   ============================================================ */
+:root[data-theme="light"] {
+  --bg: #F8F9FB;
+  --panel: #FFFFFF;
+  --card: #FFFFFF;
+  --border: rgba(0,0,0,.08);
+  --chip: #F3F4F6;
+  --ink: #111827;
+  --muted: #4B5563;
+
+  /* Adjusted carrier colors for visibility */
+  --aetna: #10B981;
+  --restricted: #D97706;
+
+  --focus: rgba(113,77,255,0.45);
+}
+
+
+/* ============================================================
+   3️⃣ Global Resets & Base Styles
+   ============================================================ */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body, #map, header, .card {
+  transition: background .35s ease, color .25s ease, border-color .25s ease;
+}
+
+
+/* ============================================================
+   4️⃣ Layout & Grid Wrapper
+   ============================================================ */
+.wrap {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: clamp(16px, 2vw, 28px);
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: clamp(16px, 2vw, 24px);
+}
+
+
+/* ============================================================
+   5️⃣ Header & Branding
+   ============================================================ */
+header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 20px);
+  padding-bottom: clamp(10px, 1.2vw, 16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  height: 48px;
+  margin-bottom: 8px;
+}
+
+.brand h1 {
+  margin: 6px 0;
+  font-weight: 700;
+  letter-spacing: .2px;
+  font-size: clamp(22px, 2.2vw, 28px);
+}
+
+.brand p {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(12px, 1.1vw, 14px);
+}
+
+
+
+/* ============================================================
+   6️⃣ Legend UI (Header)
+   ============================================================ */
+.legendUI {
+  display: flex;
+  flex-wrap: wrap;
+  top: 20px;      /* spacing from top edge of map */
+  left: 25px;     /* spacing from left edge of map */
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 14px;
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,.2);
+  display: inline-block;
+  margin-right: 6px;
+}
+
+
+/* ============================================================
+   7️⃣ Map Container
+   ============================================================ */
+.mapWrap {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: clamp(12px, 1.4vw, 16px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.35);
+  min-height: 60vh;
+}
+
+.mapHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.mapHeader h2 {
+  margin: 0;
+  font-size: clamp(16px, 1.5vw, 18px);
+}
+
+
+/* ============================================================
+   8️⃣ Map Controls (Search, Filters, Export)
+   ============================================================ */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  border-radius: 12px;
+}
+
+.search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font-size: 14px;
+  width: min(240px, 28vw);
+}
+
+.search:focus-within {
+  box-shadow: 0 0 0 3px var(--focus) inset;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  border-radius: 12px;
+}
+
+.filters label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.filters input {
+  accent-color: var(--niural-purple);
+}
+
+
+/* ============================================================
+   9️⃣ SVG Map Styles
+   ============================================================ */
+#map {
+  position: relative;
+  width: 100%;
+  height: min(78vh, 950px);
+  display: block;
+  border-radius: 14px;
+  background:
+    radial-gradient(800px 600px at 40% -10%, rgba(113,77,255,0.08), transparent 65%),
+    radial-gradient(900px 700px at 100% 120%, rgba(225,81,255,0.06), transparent 70%),
+    #0B0C10;
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.45);
+  overflow: hidden; /* ensures the legend doesn't bleed outside */
+}
+
+/* Light mode adjustment */
+:root[data-theme="light"] #map {
+  background: linear-gradient(180deg, #F9FAFB 0%, #F1F3F6 100%);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+
+/* ============================================================
+   🔟 Sidebar Cards
+   ============================================================ */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.5vw, 16px);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: clamp(12px, 1.4vw, 18px);
+  box-shadow: 0 12px 22px rgba(0,0,0,.24);
+}
+
+.card h3 {
+  margin: 0 0 8px;
+  font-size: clamp(15px, 1.4vw, 16px);
+}
+
+.card p {
+  margin: 6px 0;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) 1fr;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.kv div:nth-child(odd) {
+  color: var(--muted);
+}
+
+.kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New";
+  font-size: 12px;
+  background: var(--panel);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+
+
+/* ============================================================
+   1️⃣1️⃣ Tooltip (Hover Dialog)
+   ============================================================ */
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  transform: translate(-50%, -120%);
+  background: rgba(15,18,32,0.9);
+  color: var(--ink);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  min-width: clamp(180px, 28vw, 340px);
+  max-width: clamp(220px, 80vw, 420px);
+  opacity: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  backdrop-filter: blur(6px);
+  transition: opacity .15s ease, transform .15s ease, background .25s ease, color .25s ease;
+}
+
+/* Light variant */
+:root[data-theme="light"] .tooltip {
+  background: rgba(255,255,255,0.9);
+  color: #111827;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+}
+
+.tooltip h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.tooltip .mini-kv {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 6px;
+}
+
+.tooltip .mini-kv div:nth-child(odd) {
+  color: var(--muted);
+}
+
+.tooltip .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 99px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+  border: 1px solid rgba(255,255,255,.2);
+}
+
+
+/* ============================================================
+   1️⃣2️⃣ Map Labels & State Styles
+   ============================================================ */
+.state {
+  transition: filter .15s ease, opacity .15s ease;
+}
+
+.state:hover { filter: brightness(1.06); }
+.state.selected { stroke: #fff; stroke-width: 1.6; }
+.state.dim { opacity: .25; }
+
+.abbr {
+  font: 700 10px/1 Inter, system-ui, sans-serif;
+  fill: #0f1115;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,.9);
+  stroke-width: 2px;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.abbr tspan {
+  fill: #EEF1F6;
+  stroke: none;
+}
+
+.badge {
+  font: 900 20px/1.2 Inter, system-ui, sans-serif;
+  fill: #3A2684;
+  text-anchor: middle;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.6));
+}
+
+
+/* ============================================================
+   1️⃣3️⃣ Footer & Buttons
+   ============================================================ */
+footer {
+  grid-column: 1 / -1;
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cta {
+  background: var(--gradient);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(113,77,255,.25);
+  cursor: pointer;
+}
+
+
+/* ============================================================
+   1️⃣4️⃣ Responsiveness
+   ============================================================ */
+@media (max-width: 1100px) {
+  .wrap { grid-template-columns: 1fr; }
+  #map { height: min(65vh, 760px); }
+}
+
+@media (max-width: 680px) {
+  #map { height: 60vh; }
+  .kv { grid-template-columns: 1fr; }
+}
+
+
+/* ============================================================
+   1️⃣5️⃣ Accessibility & Utility
+   ============================================================ */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ============================================================
+   1️⃣6️⃣ Theme Toggle Button
+   ============================================================ */
+.theme-toggle {
+  background: var(--chip);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all .25s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--gradient);
+  color: #fff;
+  border-color: transparent;
+}
+
+
+/* ============================================================
+   1️⃣7️⃣ Logo Theme Swap Logic
+   ============================================================ */
+.logo-dark { display: block; }
+.logo-light { display: none; }
+
+:root[data-theme="light"] .logo-dark { display: none; }
+:root[data-theme="light"] .logo-light { display: block; }
+
+
+/* ============================================================
+   1️⃣8️⃣ SVG Legend Text Colors
+   ============================================================ */
+#svgLegend text { fill: #EDEDEF !important; }
+:root[data-theme="light"] #svgLegend text { fill: #111827 !important; }
