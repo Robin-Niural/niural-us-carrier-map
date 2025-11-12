@@ -4,12 +4,25 @@
     "subtitle": "Hover or tap a state for carrier, large-group definition, age-rating notes, and sales nuances."
   },
   "legend": {
-    "aetna": "Aetna",
-    "restricted": "No PEO MHP / Restricted"  },
-
+    "aetna": "Aetna Only",
+    "kaiser": "Kaiser Only",
+    "both": "Aetna & Kaiser",
+    "restricted": "Restricted States"
+  },
+  "cardFields": [
+    { "key": "carrier", "label": "Primary Carrier", "showColor": true },
+    { "key": "largeGroupDefinition", "label": "Large Group Definition", "showColor": false },
+    { "key": "coverageNotes", "label": "Coverage Notes", "showColor": false },
+    { "key": "salesNotes", "label": "Sales Notes", "showColor": false },
+    { "key": "clientReporting", "label": "Client Reporting", "showColor": false },
+    { "key": "levelFundedAllowed", "label": "Level Funded Allowed", "showColor": false },
+    { "key": "retirementMandate", "label": "Retirement Mandate", "showColor": false }
+  
+  ],
   "territories": {
     "Puerto Rico": "HQ in PR may not offer an Aetna PEO medical master policy. Aetna can cover WSEs of continental US HQs with WSEs in PR. Indemnity / CMED only.",
     "US Virgin Islands": "Similar to PR: continental US HQs with WSEs in VI may be covered; Indemnity / CMED plans only."
   },
-  "footerText": "© Niural AI | Carrier visualization"
+  "footerText": "© 2025 Niural AI | v1.0 "
 }
+

@@ -1,13 +1,16 @@
-{
+﻿{
   "rules": {
     "defaultCarrier": "Aetna",
-    "largeGroup101": ["CA", "CO", "NY", "VT"]
+    "largeGroup101": ["CA", "CO", "NY", "VT"],
+    "kaiserAvailable": ["CA", "CO", "GA", "HI", "DC", "MD", "VA", "OR", "WA"],
+    "bothCarriers": ["CA", "CO", "GA", "HI", "DC", "MD", "VA", "OR", "WA"]
   },
   "restrictedStates": {
     "HI": {
       "coverageNotes": "Aetna does not offer compliant plans in HI for PEOs. Therefore, Aetna is restricted.",
       "salesNotes": "",
-      "sdiRequirements": "Employers must maintain an approved Temporary Disability Insurance (TDI) policy and pay ≥ 50 % of premium (employees may pay up to 50 %). Coverage via private or self-insured plan approved by the state."
+      "sdiRequirements": "Employers must maintain an approved Temporary Disability Insurance (TDI) policy and pay ≥ 50 % of premium.",
+      "brokerContact": "Contact HI regional broker"
     },
     "NM": {
       "coverageNotes": "Aetna recommends against offering a PEO large group MHP to companies HQ'd in NM.",
@@ -20,116 +23,173 @@
       "sdiRequirements": ""
     }
   },
-  "importantStates": {
-    "AK": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "ID": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "MD": {
-      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "ME": {
-      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "MO": {
-      "coverageNotes": "PPO and EPO networks only.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "MT": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "SD": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "WY": {
-      "coverageNotes": "Limited OA MC/EPO availability.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    }
-  },
-
-  "notableStates": {
-  "NY": {
-    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
-    "salesNotes": "",
-    "sdiRequirements": "Employers must provide both Statutory Disability (DBL) and Paid Family Leave (PFL) coverage. Employers pay at least half of the premium cost; employees can contribute up to 0.5% of wages, capped at $0.60 per week. Coverage can be through an approved private insurer or the state plan."
-  },
-  "NJ": {
-    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
-    "salesNotes": "",
-    "sdiRequirements": "Employers must offer Temporary Disability Insurance (TDI) and Family Leave Insurance (FLI) through the state plan or an approved private/self-insured plan (with state approval ID if private)."
-  },
-  "CA": {
-    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
-    "salesNotes": "",
-    "sdiRequirements": "Employees fund the State Disability Insurance (SDI) program through payroll deductions. Provides short-term disability and Paid Family Leave; private substitution not allowed."
-  },
-  "RI": {
-    "coverageNotes": "Standard Aetna PPO and EPO networks available.",
-    "salesNotes": "",
-    "sdiRequirements": "Employees contribute to the Temporary Disability Insurance (TDI) and Temporary Caregiver Insurance (TCI) programs for income replacement during medical or caregiving leave."
-  },
-
-
-
-  "AK": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "ID": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "MD": {
-      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "ME": {
-      "coverageNotes": "State regulations prohibit a PEO from offering its large group medical master policy to headquartered companies with fewer than 50 eligible WSEs. Aetna’s understanding is that companies with greater than 51 eligible WSEs can be offered the PEO’s large group medical master policy.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "MO": {
-      "coverageNotes": "PPO and EPO networks only.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "MT": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "SD": {
-      "coverageNotes": "PPO only and many areas would only have access to our Indemnity or CMED plan.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    },
-    "WY": {
-      "coverageNotes": "Limited OA MC/EPO availability.",
-      "salesNotes": "",
-      "sdiRequirements": "—"
-    }
-}
-
-
 
   
-}
+  "importantStates": {
+    "AK": {},
+    "ID": {},
+    "MD": {},
+    "ME": {},
+    "MO": {},
+    "MT": {}, 
+    "SD": {},     
+    "WY": {}   
+  },
+
+
+ 
+  "notableStates": {
+  "AL": { "coverageNotes": "Standard Aetna coverage available." },
+  "AK": {
+    "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files.",
+    "clientReporting": "Yes , client level reporting",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "AZ": { "coverageNotes": "Standard Aetna coverage available." },
+  "AR": { "coverageNotes": "Standard Aetna coverage available." },
+  "CA": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (CalSavers)",
+    "clientReporting": "Yes , client level reporting",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "CO": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (Colorado Secure Savings)"
+  },
+  "CT": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (MyCTSavings)",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "DE": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (Delaware EARNS)",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "DC": { "coverageNotes": "Standard Aetna coverage available." },
+  "FL": { "coverageNotes": "Standard Aetna coverage available." },
+  "GA": { "coverageNotes": "Standard Aetna coverage available." },
+  "HI": { "coverageNotes": "Standard Aetna coverage available." },
+  "ID": { "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files." },
+  "IL": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (Illinois Secure Choice / state program)"
+  },
+  "IN": { "coverageNotes": "Standard Aetna coverage available." },
+  "IA": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "KS": { "coverageNotes": "Standard Aetna coverage available." },
+  "KY": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "LA": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "ME": {
+    "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files.",
+    "retirementMandate": "Yes , mandatory (Maine Retirement Savings Program)",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "MD": {
+    "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files.",
+    "retirementMandate": "Yes , mandatory (MarylandSaves)",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "MA": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Limited , state MEP / CORE Plan focus (not a universal auto-IRA mandate)",
+    "clientReporting": "Yes , client level reporting",
+    "levelFundedAllowed": "Assumed , available (verify with carrier/TPA)"
+  },
+  "MI": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "MN": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "MS": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "MO": { "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files." },
+  "MT": { "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files." },
+  "NE": { "coverageNotes": "Standard Aetna coverage available." ,
+    "clientReporting": "Yes , client level reporting"
+  },
+  "NV": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (Nevada program)",
+    "clientReporting": "Yes , client level reporting"
+  },
+  "NH": { "coverageNotes": "Standard Aetna coverage available." },
+  "NJ": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (RetireReady NJ)",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "NM": { "coverageNotes": "Standard Aetna coverage available." },
+  "NY": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (NY Secure Choice)",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "NC": { "coverageNotes": "Standard Aetna coverage available." },
+  "ND": { "coverageNotes": "Standard Aetna coverage available." },
+  "OH": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "workersCompMonopolistic": "Yes , state-run only"
+  },
+  "OK": { "coverageNotes": "Standard Aetna coverage available." },
+  "OR": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (OregonSaves)"
+  },
+  "PA": { "coverageNotes": "Standard Aetna coverage available." },
+  "RI": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (RI Auto-IRA)",
+    "clientReporting": "Yes , client level reporting",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "SC": { "coverageNotes": "Standard Aetna coverage available." },
+  "SD": {
+    "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files.",
+    "clientReporting": "Yes , client level reporting",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  },
+  "TN": { "coverageNotes": "Standard Aetna coverage available." },
+  "TX": { "coverageNotes": "Standard Aetna coverage available." },
+  "UT": { "coverageNotes": "Standard Aetna coverage available." },
+  "VT": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (Vermont program)"
+  },
+  "VA": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Yes , mandatory (Virginia program)"
+  },
+  "WA": {
+    "coverageNotes": "Standard Aetna coverage available.",
+    "retirementMandate": "Open marketplace / program (Washington marketplace option)",
+    "workersCompMonopolistic": "Yes , state-run only"
+  },
+  "WV": { "coverageNotes": "Standard Aetna coverage available." },
+  "WI": { "coverageNotes": "Standard Aetna coverage available." },
+  "WY": {
+    "coverageNotes": "Standard Aetna Coverage products (OAMC, POS, EPO, PPO) but exact plans are subject to member's zip code and Aetna eligibility files.",
+    "workersCompMonopolistic": "Yes , state-run only",
+    "levelFundedAllowed": "Yes , available (verify with carrier/TPA)"
+  }}
+ 
+  }
+
+
+
+

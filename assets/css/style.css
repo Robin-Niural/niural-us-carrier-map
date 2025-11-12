@@ -27,8 +27,10 @@
   --muted: #A1A1AB;
 
   /* Carrier colors */
-  --aetna: #6EE7B7;       /* Green */
-  --restricted: #F59E0B;  /* Amber */
+  --aetna: #7D3F98;       /* Aetna only - Purple */
+  --kaiser: #006ba6;      /* Kaiser only - Blue */
+  --both: #008080;        /* Aetna + Kaiser - Teal */
+  --restricted: #FF6B35;  /* Restricted - Red-orange */
 
   /* Focus & interaction */
   --focus: rgba(113,77,255,0.65);
@@ -48,8 +50,10 @@
   --muted: #4B5563;
 
   /* Adjusted carrier colors for visibility */
-  --aetna: #10B981;
-  --restricted: #D97706;
+  --aetna: #7D3F98;       /* Aetna only - Purple */
+  --kaiser: #006ba6;      /* Kaiser only - Blue */
+  --both: #008080;        /* Aetna + Kaiser - Teal */
+  --restricted: #FF6B35;  /* Restricted - Red-orange */
 
   --focus: rgba(113,77,255,0.45);
 }

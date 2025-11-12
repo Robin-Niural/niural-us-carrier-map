@@ -1,4 +1,4 @@
-/**
+﻿/**
  * assets/js/main.js
  * Niural AI — U.S. Carrier Map
  *
@@ -43,7 +43,7 @@
 
   /**
    * Return a hex/color string for a given carrier name.
-   * Defaults to Aetna color if unknown.
+   * Handles Aetna, Kaiser, Both, and Restricted.
    * @param {string} carrier
    * @returns {string}
    */
@@ -51,6 +51,8 @@
     if (!carrier) return getCSSVar('--aetna');
     switch (carrier.toLowerCase()) {
       case 'aetna': return getCSSVar('--aetna');
+      case 'kaiser': return getCSSVar('--kaiser');
+      case 'both': return getCSSVar('--both');
       case 'restricted': return getCSSVar('--restricted');
       default: return getCSSVar('--aetna');
     }
@@ -138,48 +140,46 @@
     const large101 = new Set(rules.largeGroup101 || []);
     const restrictedSet = new Set(Object.keys(stateConfig.restrictedStates || {}));
     const importantMap = stateConfig.importantStates || {};
+    const kaiserStates = new Set(rules.kaiserAvailable || []);
 
     const stateDataFinal = {};
 
     uspsList.forEach((code) => {
+      // Determine carrier based on Kaiser availability
+      let carrierType = 'Aetna';
+      if (restrictedSet.has(code)) {
+        carrierType = 'Restricted';
+      } else if (kaiserStates.has(code)) {
+        carrierType = 'Both';  // Both Aetna and Kaiser
+      }
+      
       stateDataFinal[code] = {
-        carrier: (restrictedSet.has(code) ? 'Restricted' : (rules.defaultCarrier || 'Aetna')),
-        largeGroupDefinition: (large101.has(code) ? '101+ FTEs' : '51+ FTEs'),
-        coverageNotes: 'Standard Aetna coverage',
-        sdiRequirements: '—',
-        salesNotes: ''
+        carrier: carrierType,
+        largeGroupDefinition: (large101.has(code) ? '101+ FTEs' : '51+ FTEs')
       };
     });
 
     // Apply restricted overrides
     Object.entries(stateConfig.restrictedStates || {}).forEach(([code, o]) => {
       if (!stateDataFinal[code]) stateDataFinal[code] = {};
-      Object.assign(stateDataFinal[code], {
-        carrier: 'Restricted',
-        coverageNotes: o.coverageNotes || 'State-specific PEO compliance rules',
-        sdiRequirements: o.sdiRequirements || '—',
-        salesNotes: o.salesNotes || ''
-      });
+      stateDataFinal[code].carrier = 'Restricted';
+      // Merge all properties from restricted state
+      Object.assign(stateDataFinal[code], o);
     });
 
-    // Apply important states
+    // Apply important states - mark them as important
     Object.entries(importantMap).forEach(([code, o]) => {
       if (!stateDataFinal[code]) stateDataFinal[code] = {};
-      Object.assign(stateDataFinal[code], {
-        important: true,
-        ageGroupNotes: o.ageGroupNotes || stateDataFinal[code].ageGroupNotes,
-        salesNotes: o.salesNotes || stateDataFinal[code].salesNotes
-      });
+      stateDataFinal[code].important = true;
+      // Merge all properties from important state
+      Object.assign(stateDataFinal[code], o);
     });
 
-    // Apply notable (non-starred) states
+    // Apply notable (non-starred) states - merge ALL properties
     Object.entries(stateConfig.notableStates || {}).forEach(([code, o]) => {
       if (!stateDataFinal[code]) stateDataFinal[code] = {};
-      Object.assign(stateDataFinal[code], {
-        coverageNotes: o.coverageNotes || stateDataFinal[code].coverageNotes,
-        sdiRequirements: o.sdiRequirements || stateDataFinal[code].sdiRequirements,
-        salesNotes: o.salesNotes || stateDataFinal[code].salesNotes
-      });
+      // Merge all properties from notable state (full merge, not selective)
+      Object.assign(stateDataFinal[code], o);
     });
 
     return stateDataFinal;
@@ -321,7 +321,9 @@
       const BOX_W = Math.min(260, Math.max(220, svg.node().clientWidth * 0.22));
 
       const items = [
-        { label: (appConfig.legend?.aetna || 'Aetna'), color: getCSSVar('--aetna') },
+        { label: (appConfig.legend?.aetna || 'Aetna Only'), color: getCSSVar('--aetna') },
+        { label: (appConfig.legend?.kaiser || 'Kaiser Only'), color: getCSSVar('--kaiser') },
+        { label: (appConfig.legend?.both || 'Aetna & Kaiser'), color: getCSSVar('--both') },
         { label: (appConfig.legend?.restricted || 'Restricted'), color: getCSSVar('--restricted') }
       ];
 
@@ -445,8 +447,11 @@
         const code = (fipsToUSPS[d.id] || nameToUSPS[d.properties.name]);
         const info = stateDataFinal[code] || {};
         const carrier = (info.carrier || 'Unknown').toLowerCase();
+        
+        // Check if this carrier type is active
         const includeCarrier = active.has(carrier);
         const includeImportant = info.important ? active.has('important') : true;
+        
         return !(includeCarrier && includeImportant);
       });
 
@@ -454,8 +459,10 @@
         const code = (fipsToUSPS[d.id] || nameToUSPS[d.properties.name]);
         const info = stateDataFinal[code] || {};
         const carrier = (info.carrier || 'Unknown').toLowerCase();
+        
         const includeCarrier = active.has(carrier);
         const includeImportant = info.important ? active.has('important') : true;
+        
         d3.select(this).attr('opacity', (includeCarrier && includeImportant) ? 1 : 0.25);
       });
 
@@ -464,6 +471,7 @@
         const info = stateDataFinal[code] || {};
         const includeImportant = info.important ? active.has('important') : true;
         const carrier = (info.carrier || 'Unknown').toLowerCase();
+        
         return (active.has(carrier) && includeImportant) ? 1 : 0.15;
       });
     };
@@ -477,21 +485,57 @@
 
     /**
      * Show tooltip near the mouse with state summary.
+     * Dynamically renders fields based on appConfig.cardFields
      * @param {number} x - pageX
      * @param {number} y - pageY
      * @param {string} name - state name
      * @param {string} code - USPS code
      * @param {Object} info - state info object
      */
+    // Format carrier display text
+    function formatCarrierDisplay(carrierValue) {
+      if (carrierValue === 'Both') {
+        return 'Both Aetna and Kaiser';
+      }
+      return carrierValue;
+    }
+
     function showTooltip(x, y, name, code, info) {
+      const fields = appConfig.cardFields || [
+        { key: 'carrier', label: 'Carrier', showColor: true },
+        { key: 'largeGroupDefinition', label: 'Large Group', showColor: false },
+        { key: 'coverageNotes', label: 'Coverage', showColor: false },
+        { key: 'sdiRequirements', label: 'SDI', showColor: false },
+        { key: "clientReporting", "label": "Client Reporting", "showColor": false },
+        { key: "levelFundedAllowed", "label": "Level Funded Allowed", "showColor": false },
+        { key: "retirementMandate", "label": "Retirement Mandate", "showColor": false }
+      ];
+
+      let fieldsHTML = '<div class="mini-kv">';
+      fields.forEach(field => {
+        const value = info[field.key];
+        // Skip field if it doesn't exist or is empty (except for 'carrier' which always shows)
+        if (field.key !== 'carrier' && (!value || value === '')) {
+          return; // Skip this field
+        }
+        
+        let displayValue = value || 'TBD';
+        if (field.key === 'carrier') {
+          displayValue = formatCarrierDisplay(displayValue);
+        }
+        fieldsHTML += `<div>${field.label}</div><div>`;
+        if (field.showColor && field.key === 'carrier') {
+          fieldsHTML += `<span class="dot" style="background:${colorForCarrier(info.carrier)}"></span>${displayValue}`;
+        } else {
+          fieldsHTML += displayValue;
+        }
+        fieldsHTML += '</div>';
+      });
+      fieldsHTML += '</div>';
+
       tooltipEl.html(`
         <h4>${name} <span style="opacity:.75;font-weight:500;">(${code})${info.important ? ' *' : ''}</span></h4>
-        <div class="mini-kv">
-          <div>Carrier</div><div><span class="dot" style="background:${colorForCarrier(info.carrier)}"></span>${info.carrier || 'Unknown'}</div>
-          <div>Large Group</div><div>${info.largeGroupDefinition || 'TBD'}</div>
-          <div>Coverage</div><div>${info.coverageNotes || 'TBD'}</div>
-          <div>SDI</div><div>${info.sdiRequirements || '—'}</div>
-        </div>
+        ${fieldsHTML}
         ${info.salesNotes ? `<div style="margin-top:6px; color:var(--muted)">${info.salesNotes}</div>` : ''}
       `);
       tooltipEl.style('left', `${x}px`)
@@ -507,6 +551,7 @@
 
     /**
      * Render the detailed sidebar for a selected state.
+     * Dynamically renders fields based on appConfig.cardFields
      * @param {string} name
      * @param {string} code
      * @param {Object} info
@@ -515,20 +560,31 @@
       detailTitle.text(`${name} (${code})${info.important ? ' *' : ''}`);
       detailBodyKV.html('');
 
-      const rows = [
-        ['Primary carrier', info.carrier || 'Unknown'],
-        ['Large group definition', info.largeGroupDefinition || 'TBD'],
-        ['Coverage notes', info.coverageNotes || 'TBD'],
-        ['SDI requirements', info.sdiRequirements || '—'],
-        ['Sales nuances', info.salesNotes || '—']
+      const fields = appConfig.cardFields || [
+        { key: 'carrier', label: 'Primary Carrier', showColor: true },
+        { key: 'largeGroupDefinition', label: 'Large Group Definition', showColor: false },
+        { key: 'coverageNotes', label: 'Coverage Notes', showColor: false },
+        { key: 'sdiRequirements', label: 'SDI Requirements', showColor: false },
+        { key: 'salesNotes', label: 'Sales Notes', showColor: false }
       ];
 
-      rows.forEach(([k, v]) => {
-        detailBodyKV.append('div').text(k);
-        if (k === 'Primary carrier') {
-          detailBodyKV.append('div').html(`<span class="chip"><span style="width:8px;height:8px;border-radius:99px;background:${colorForCarrier(info.carrier)};display:inline-block"></span>${v}</span>`);
+      fields.forEach(field => {
+        const value = info[field.key];
+        // Skip field if it doesn't exist or is empty (except for 'carrier' which always shows)
+        if (field.key !== 'carrier' && (!value || value === '')) {
+          return; // Skip this field
+        }
+        
+        detailBodyKV.append('div').text(field.label);
+        let displayValue = value || '—';
+        if (field.key === 'carrier') {
+          displayValue = formatCarrierDisplay(displayValue);
+        }
+        
+        if (field.showColor && field.key === 'carrier') {
+          detailBodyKV.append('div').html(`<span class="chip"><span style="width:8px;height:8px;border-radius:99px;background:${colorForCarrier(info.carrier)};display:inline-block"></span>${displayValue}</span>`);
         } else {
-          detailBodyKV.append('div').text(v);
+          detailBodyKV.append('div').text(displayValue);
         }
       });
     }
