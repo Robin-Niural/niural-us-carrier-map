@@ -301,7 +301,22 @@
     /* Legend rendering (embedded SVG legend that avoids overlapping) */
     let legend;
     const renderLegend = () => {
+      // remove any existing legend
       if (legend) legend.remove();
+
+      const vw = svg.node().clientWidth;
+
+      // On small screens we don't render the embedded SVG legend to avoid
+      // overlap with the map; the header `.legendUI` will be shown instead.
+      // This keeps the map clear and prevents the legend from covering
+      // important features on narrow viewports.
+      // Use a slightly higher cutoff to avoid overlap on medium-narrow screens.
+      const LEGEND_MIN_WIDTH = 780;
+      if (vw <= LEGEND_MIN_WIDTH) {
+        legend = null;
+        return;
+      }
+
       legend = svg.append('g').attr('id', 'svgLegend');
 
       // Compute map bounding box
@@ -317,8 +332,9 @@
       const ITEM_H = 20 * scale;
       const SW = 12 * scale;
       const RADIUS = 10 * scale;
-      const FONT = 12 * scale;
-      const BOX_W = Math.min(260, Math.max(220, svg.node().clientWidth * 0.22));
+      const FONT = svg.node().clientWidth < 900 ? 11 * scale : 12 * scale;
+      // Use `let` so we can reduce the legend width if the map is narrow
+      let BOX_W = Math.min(260, Math.max(180, svg.node().clientWidth * 0.22));
 
       const items = [
         { label: (appConfig.legend?.aetna || 'Aetna Only'), color: getCSSVar('--aetna') },
@@ -327,9 +343,34 @@
         { label: (appConfig.legend?.restricted || 'Restricted'), color: getCSSVar('--restricted') }
       ];
 
-      const legendMargin = Math.max(16, svg.node().clientWidth * 0.02);
-      const legendX = innerX + legendMargin;
-      const legendY = innerY + legendMargin;
+      // Compute legend placement more conservatively to avoid overlap:
+      // estimate total height and, if it would occupy more than ~33% of the
+      // map height, position the legend at bottom-right or bail out.
+      const legendMargin = Math.max(12, svg.node().clientWidth * 0.02);
+      const estTitleH = 18 * scale; // approximate title height
+      const estBoxH = PAD + (items.length * ITEM_H) + PAD + estTitleH; // include title and padding
+
+      // Ensure the legend width fits inside the map - shrink if necessary
+      const maxBoxW = innerW - (legendMargin * 2);
+      if (BOX_W > maxBoxW) BOX_W = Math.max(120, maxBoxW);
+
+      let legendX = innerX + legendMargin;
+      let legendY = innerY + legendMargin;
+
+      const MAX_VERT_RATIO = 0.33;
+      if (estBoxH > innerH * MAX_VERT_RATIO) {
+        // try bottom-right placement
+        const tryX = innerX + innerW - BOX_W - legendMargin;
+        const tryY = innerY + innerH - estBoxH - legendMargin;
+        if (tryY >= legendMargin) {
+          legendX = tryX;
+          legendY = tryY;
+        } else {
+          // not enough vertical room — do not render embedded legend
+          legend = null;
+          return;
+        }
+      }
 
       const isLightTheme = document.documentElement.getAttribute('data-theme') === 'light';
       const bgColor = isLightTheme ? 'rgba(255,255,255,0.9)' : 'rgba(19,19,26,0.92)';
