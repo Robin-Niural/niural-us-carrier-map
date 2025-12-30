@@ -523,10 +523,12 @@
       statePaths.classed('dim', (d) => {
         const code = (fipsToUSPS[d.id] || nameToUSPS[d.properties.name]);
         const info = stateDataFinal[code] || {};
-        const carrier = (info.carrier || 'Unknown').toLowerCase();
+        const rawCarrier = (info.carrier || 'Unknown');
+        const carrier = (appConfig.legend?.hideKaiser && rawCarrier === 'Both') ? 'Aetna' : rawCarrier;
+        const carrierLower = carrier.toLowerCase();
         
         // Check if this carrier type is active
-        const includeCarrier = active.has(carrier);
+        const includeCarrier = active.has(carrierLower);
         const includeImportant = info.important ? active.has('important') : true;
         
         return !(includeCarrier && includeImportant);
@@ -535,9 +537,11 @@
       labels.each(function (d) {
         const code = (fipsToUSPS[d.id] || nameToUSPS[d.properties.name]);
         const info = stateDataFinal[code] || {};
-        const carrier = (info.carrier || 'Unknown').toLowerCase();
+        const rawCarrier = (info.carrier || 'Unknown');
+        const carrier = (appConfig.legend?.hideKaiser && rawCarrier === 'Both') ? 'Aetna' : rawCarrier;
+        const carrierLower = carrier.toLowerCase();
         
-        const includeCarrier = active.has(carrier);
+        const includeCarrier = active.has(carrierLower);
         const includeImportant = info.important ? active.has('important') : true;
         
         d3.select(this).attr('opacity', (includeCarrier && includeImportant) ? 1 : 0.25);
@@ -547,9 +551,11 @@
         const code = (fipsToUSPS[d.id] || nameToUSPS[d.properties.name]);
         const info = stateDataFinal[code] || {};
         const includeImportant = info.important ? active.has('important') : true;
-        const carrier = (info.carrier || 'Unknown').toLowerCase();
+        const rawCarrier = (info.carrier || 'Unknown');
+        const carrier = (appConfig.legend?.hideKaiser && rawCarrier === 'Both') ? 'Aetna' : rawCarrier;
+        const carrierLower = carrier.toLowerCase();
         
-        return (active.has(carrier) && includeImportant) ? 1 : 0.15;
+        return (active.has(carrierLower) && includeImportant) ? 1 : 0.15;
       });
     };
 
