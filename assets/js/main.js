@@ -225,7 +225,9 @@
       .attr('d', path)
       .attr('fill', (d) => {
         const code = (fipsToUSPS[d.id] || nameToUSPS[d.properties.name]);
-        return colorForCarrier(stateDataFinal[code]?.carrier);
+        const rawCarrier = stateDataFinal[code]?.carrier;
+        const effectiveCarrier = (appConfig.legend?.hideKaiser && rawCarrier === 'Both') ? 'Aetna' : rawCarrier;
+        return colorForCarrier(effectiveCarrier);
       })
       .attr('stroke', 'rgba(255,255,255,.16)')
       .attr('stroke-width', 0.8)
@@ -336,12 +338,19 @@
       // Use `let` so we can reduce the legend width if the map is narrow
       let BOX_W = Math.min(260, Math.max(180, svg.node().clientWidth * 0.22));
 
-      const items = [
-        { label: (appConfig.legend?.aetna || 'Aetna Only'), color: getCSSVar('--aetna') },
-        { label: (appConfig.legend?.kaiser || 'Kaiser Only'), color: getCSSVar('--kaiser') },
-        { label: (appConfig.legend?.both || 'Aetna & Kaiser'), color: getCSSVar('--both') },
-        { label: (appConfig.legend?.restricted || 'Restricted'), color: getCSSVar('--restricted') }
+      const legendConfig = appConfig.legend || {};
+      const availableLegendItems = [
+        { key: 'aetna', label: legendConfig.aetna || 'Aetna', color: getCSSVar('--aetna') },
+        { key: 'kaiser', label: legendConfig.kaiser || 'Kaiser Only', color: getCSSVar('--kaiser') },
+        { key: 'both', label: legendConfig.both || 'Aetna & Kaiser', color: getCSSVar('--both') },
+        { key: 'restricted', label: legendConfig.restricted || 'Restricted', color: getCSSVar('--restricted') }
       ];
+
+      const items = availableLegendItems.filter(it => {
+        if (it.key === 'kaiser' && legendConfig.hideKaiser) return false;
+        if (it.key === 'both' && (legendConfig.hideBoth || legendConfig.hideKaiser)) return false;
+        return true;
+      });
 
       // Compute legend placement more conservatively to avoid overlap:
       // estimate total height and, if it would occupy more than ~33% of the
@@ -356,6 +365,33 @@
 
       let legendX = innerX + legendMargin;
       let legendY = innerY + legendMargin;
+
+      // Avoid overlapping critical states (e.g., WA). If the legend rectangle
+      // would overlap a state's bounding box, nudge it downward to sit below the
+      // feature while staying within the map bounds. This keeps the legend on the left
+      // but prevents it from obscuring states like Washington.
+      try {
+        const estRect = () => ({ x: legendX, y: legendY, w: BOX_W, h: estBoxH });
+        const overlaps = (r, b) => !(b[1][0] < r.x || b[0][0] > r.x + r.w || b[1][1] < r.y || b[0][1] > r.y + r.h);
+
+        // Check Washington (WA) first as it commonly collides with the top-left legend.
+        const criticalStates = ['WA'];
+        const padding = Math.max(8, legendMargin);
+
+        for (let code of criticalStates) {
+          const feat = statesGeo.features.find(f => (fipsToUSPS[f.id] || nameToUSPS[f.properties.name]) === code);
+          if (feat) {
+            const b = path.bounds(feat);
+            const r = estRect();
+            if (overlaps(r, b)) {
+              // push legend below this state's bottom edge (but keep inside map)
+              legendY = Math.min(innerH - estBoxH - legendMargin, b[1][1] + padding);
+            }
+          }
+        }
+      } catch (err) {
+        // non-fatal: fall back to default placement if anything goes wrong
+      }
 
       const MAX_VERT_RATIO = 0.33;
       if (estBoxH > innerH * MAX_VERT_RATIO) {
@@ -536,6 +572,7 @@
     // Format carrier display text
     function formatCarrierDisplay(carrierValue) {
       if (carrierValue === 'Both') {
+        if (appConfig.legend?.hideKaiser) return 'Aetna';
         return 'Both Aetna and Kaiser';
       }
       return carrierValue;
@@ -566,7 +603,8 @@
         }
         fieldsHTML += `<div>${field.label}</div><div>`;
         if (field.showColor && field.key === 'carrier') {
-          fieldsHTML += `<span class="dot" style="background:${colorForCarrier(info.carrier)}"></span>${displayValue}`;
+          const dotCarrier = (appConfig.legend?.hideKaiser && info.carrier === 'Both') ? 'Aetna' : info.carrier;
+          fieldsHTML += `<span class="dot" style="background:${colorForCarrier(dotCarrier)}"></span>${displayValue}`;
         } else {
           fieldsHTML += displayValue;
         }
@@ -623,7 +661,8 @@
         }
         
         if (field.showColor && field.key === 'carrier') {
-          detailBodyKV.append('div').html(`<span class="chip"><span style="width:8px;height:8px;border-radius:99px;background:${colorForCarrier(info.carrier)};display:inline-block"></span>${displayValue}</span>`);
+          const chipCarrier = (appConfig.legend?.hideKaiser && info.carrier === 'Both') ? 'Aetna' : info.carrier;
+          detailBodyKV.append('div').html(`<span class="chip"><span style="width:8px;height:8px;border-radius:99px;background:${colorForCarrier(chipCarrier)};display:inline-block"></span>${displayValue}</span>`);
         } else {
           detailBodyKV.append('div').text(displayValue);
         }

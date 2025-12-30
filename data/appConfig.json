@@ -4,10 +4,12 @@
     "subtitle": "Hover or tap a state for carrier, large-group definition, age-rating notes, and sales nuances."
   },
   "legend": {
-    "aetna": "Aetna Only",
+    "aetna": "Aetna",
     "kaiser": "Kaiser Only",
     "both": "Aetna & Kaiser",
-    "restricted": "Restricted States"
+    "restricted": "Restricted",
+    "hideKaiser": true,
+    "hideBoth": true
   },
   "cardFields": [
     { "key": "carrier", "label": "Primary Carrier", "showColor": true },
